@@ -1,0 +1,24 @@
+name: kmx-ibanking
+
+services:
+  qt-dev:
+    # Built from ./Dockerfile: the upstream Qt image plus clang-20 for C++26.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kmxbank/qt-dev:6.11.0-clang20
+    # The image is built from ./Dockerfile, not published to a registry.
+    pull_policy: build
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - QT_QUICK_BACKEND=${QT_QUICK_BACKEND:-}
+      - QSG_RHI_BACKEND=${QSG_RHI_BACKEND:-}
+    network_mode: host
+    command: ["bash", "-lc", "sleep infinity"]
